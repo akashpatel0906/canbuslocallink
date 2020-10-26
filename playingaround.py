@@ -1,33 +1,37 @@
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
 import pandas as pd
 import plotly.express as px
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
+import plotly.express as px
+import pandas as pd
 
-external_stylesheets = ["https://codepen.io/chriddyp/pen/bWLwgP.css"]
+external_stylesheets = ['https://filebin.net/n23827xxj36naw6o']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 server=app.server
 
-app.layout = html.Div(
-    [
-        html.I("Try typing in input 1 & 2, and observe how debounce is impacting the callbacks. Press Enter and/or Tab key in Input 2 to cancel the delay"),
-        html.Br(),
-        dcc.Input(id="input1", type="text", placeholder=""),
-        html.Div(id="output")
-    ]
-)
+df = pd.read_csv('/Users/akashpatel/Documents/FormulaTest/testnew.csv')
 
+fig = px.line(df, x = 'Timestamp', y = 'Value(DEC)', color='Name', title='CANBus Data Values')
 
-@app.callback(Output("output", "children"),[Input("input1", "value")])
-def update_output(input1):
-    df=pd.read_csv(input1)
-    fig = px.line(df, x = 'Timestamp', y = 'Value(DEC)', color='Name', title='CANBus Data Values')
-    fig.show()
-    return input1
+app.layout = html.Div(children=[
+    html.H2(children='CANBus Grapher'),
 
+    html.Div(children='''
+        Made by Illini Formula Electric.
+    '''),
 
-if __name__ == "__main__":
+    dcc.Graph(
+        id='example-graph',
+        
+        figure=fig
+    )
+])
+
+if __name__ == '__main__':
     app.run_server(debug=True)
+
+
